@@ -1,0 +1,10 @@
+{
+  "name": "flujograma-vista",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/data.test.js",
+    "test:browser": "node tests/browser.mjs"
+  },
+  "devDependencies": { "playwright": "^1.56.0" }
+}
