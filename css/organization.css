@@ -1,0 +1,30 @@
+.organization-section { margin-top: 36px; padding-top: 30px; border-top: 1px solid var(--line); }
+.organization-section h3 { margin-top: 8px; font-size: clamp(1.4rem, 2.5vw, 1.9rem); letter-spacing: -.04em; }
+.organization-level { list-style: none; padding: 22px 0 0; margin: 0; display: flex; justify-content: center; gap: 22px; }
+.organization-root { padding-top: 0; }
+.organization-node { flex: 1; min-width: 0; position: relative; }
+.organization-level:not(.organization-root) > .organization-node::before { content: ''; position: absolute; top: -22px; left: 50%; height: 22px; border-left: 1px solid var(--line-strong); }
+.organization-level:not(.organization-root) > .organization-node::after { content: ''; position: absolute; top: -22px; left: 0; width: calc(100% + 22px); border-top: 1px solid var(--line-strong); }
+.organization-level > .organization-node:first-child::after { left: 50%; width: calc(50% + 22px); }
+.organization-level > .organization-node:last-child::after { width: 50%; }
+.organization-level > .organization-node:only-child::after { display: none; }
+.organization-card { max-width: 680px; margin: 0 auto; padding: 18px; border: 1px solid var(--line); border-top: 3px solid var(--red); border-radius: 14px; background: #FBF9F4; }
+.organization-card h4 { font-size: 14px; }
+.organization-card p { color: var(--muted); font-size: 12px; margin-top: 8px; }
+.organization-card details { margin-top: 12px; font-size: 12px; line-height: 1.65; }
+.organization-card summary { cursor: pointer; color: var(--red-deep); font-weight: 600; }
+.organization-card ul { padding-left: 20px; margin-bottom: 0; }
+.organization-card li + li { margin-top: 6px; }
+@media (max-width: 767px) {
+  .organization-level { flex-direction: column; gap: 22px; }
+  .organization-level:not(.organization-root) { margin-left: 12px; border-left: 1px solid var(--line-strong); padding-left: 14px; }
+  .organization-level:not(.organization-root) > .organization-node::before { top: 20px; left: -14px; width: 14px; height: 0; border-left: 0; border-top: 1px solid var(--line-strong); }
+  .organization-level > .organization-node::after { display: none; }
+}
+@media print {
+  .organization-section .project-link { display: none; }
+  .organization-level { display: block; padding-top: 10px; }
+  .organization-level .organization-node::before, .organization-level .organization-node::after { display: none; }
+  .organization-card { max-width: none; background: #fff; break-inside: avoid; margin-bottom: 10px; }
+  .organization-card details::details-content { display: block; content-visibility: visible; }
+}

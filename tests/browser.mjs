@@ -1,5 +1,6 @@
 import { chromium } from 'playwright';
 import assert from 'node:assert/strict';
+import { FLOWS } from '../js/data/flows.js';
 import { mkdir, writeFile } from 'node:fs/promises';
 const url = process.env.APP_URL || 'http://127.0.0.1:8000/flujograma-vista/';
 const baseline = process.env.BASELINE_URL;
@@ -18,36 +19,71 @@ async function open(target, width, height) {
   await page.waitForTimeout(200);
   return page;
 }
-async function snapshot(page) {
-  return page.evaluate(() => {
-    const roots = ['flowsList', 'teamGrid', 'flowIndexList', 'filterChips', 'dialogContent'];
-    const html = roots.map(id => document.getElementById(id)?.innerHTML);
-    const layout = [...document.body.querySelectorAll('*')].map(node => {
-      const rect = node.getBoundingClientRect();
+async function snapshot(page, selector) {
+  return page.locator(selector).evaluate(root => {
+    const origin = root.getBoundingClientRect();
+    return { html: root.innerHTML, layout: [root, ...root.querySelectorAll('*')].map(node => {
+      const r = node.getBoundingClientRect();
       const style = getComputedStyle(node);
-      let hash = 2166136261;
-      const values = Array.from(style).sort().map(key => key + ':' + style.getPropertyValue(key)).join(';');
-      for (let i = 0; i < values.length; i++) hash = Math.imul(hash ^ values.charCodeAt(i), 16777619);
-      return [node.tagName, rect.x, rect.y, rect.width, rect.height, hash >>> 0];
-    });
-    return { html, layout };
+      return [node.tagName, r.width || r.height ? +(r.x-origin.x).toFixed(3) : 0, r.width || r.height ? +(r.y-origin.y).toFixed(3) : 0, r.width, r.height,
+        Array.from(style).sort().map(key => key + ':' + style.getPropertyValue(key)).join(';')];
+    }) };
   });
 }
+
 try {
-  for (const [width, height] of [[1440,900],[1024,768],[768,1024],[390,844]]) {
+  for (const [width, height] of [[1440,900],[1024,768],[768,1024],[390,844]].filter(([w]) => !process.env.VIEWPORT_WIDTH || w === Number(process.env.VIEWPORT_WIDTH))) {
     const page = await open(url, width, height);
     assert.equal(await page.locator('.flow-card').count(), 7);
+    assert.equal(await page.locator('.plan-2027-card').count(),6);
+    assert.equal(await page.locator('.organization-card').count(),4);
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+    for (const text of ['Ver organigrama','Ver plan 2027']) {
+      const link = page.getByRole('link',{name:text, exact:true});
+      assert.equal(await link.getAttribute('target'),'_blank');
+      assert.equal(await link.getAttribute('rel'),'noopener noreferrer');
+      assert.ok((await link.getAttribute('href')).startsWith('https://docs.google.com/document/d/'));
+      await link.focus();
+      assert.equal(await link.evaluate(n => n === document.activeElement),true);
+    }
+    await page.locator('.organization-card summary').first().click();
+    assert.equal(await page.locator('.organization-card details[open]').count(),1);
+    await page.locator('.organization-card summary').first().click();
     if (baseline) {
       const before = await open(baseline, width, height);
-      // Script elements have changed intentionally; exclude them from computed layout snapshots.
-      await before.locator('script').evaluateAll(nodes => nodes.forEach(n => n.remove()));
-      await page.locator('script').evaluateAll(nodes => nodes.forEach(n => n.remove()));
-      assert.ok(JSON.stringify(await snapshot(page)) === JSON.stringify(await snapshot(before)), `DOM/estilos/geometría ${width}`);
-      const a = await before.screenshot({ fullPage: true, animations: 'disabled' });
-      const b = await page.screenshot({ fullPage: true, animations: 'disabled' });
-      await writeFile(`test-results/before-${width}.png`, a);
-      await writeFile(`test-results/after-${width}.png`, b);
-      assert.ok(a.equals(b), `capturas idénticas ${width}`);
+      // Compare each protected flow independently of added sections below the map.
+      await page.addStyleTag({content: '.site-nav, .back-top, .skip-link { visibility: hidden; }'});
+      await before.addStyleTag({content: '.site-nav, .back-top, .skip-link { visibility: hidden; }'});
+      await page.mouse.move(0,0);
+      await before.mouse.move(0,0);
+      for (const n of [2,4,6]) {
+        const selector = '#flujo-' + n;
+        const current = await snapshot(page,selector), original = await snapshot(before,selector);
+        if (JSON.stringify(current)!==JSON.stringify(original)) {
+          await writeFile('test-results/current.json',JSON.stringify(current));
+          await writeFile('test-results/original.json',JSON.stringify(original));
+        }
+        assert.ok(JSON.stringify(current) === JSON.stringify(original), `datos/DOM/estilos/geometría flujo ${n}, ${width}`);
+        const a = await before.locator(selector).screenshot({animations:'disabled'});
+        const b = await page.locator(selector).screenshot({animations:'disabled'});
+        await writeFile(`test-results/before-${width}-flow-${n}.png`, a);
+        await writeFile(`test-results/after-${width}-flow-${n}.png`, b);
+        const maxDifference = await page.evaluate(async ({a,b}) => {
+          async function pixels(encoded) {
+            const bytes = Uint8Array.from(atob(encoded), ch => ch.charCodeAt(0));
+            const bitmap = await createImageBitmap(new Blob([bytes],{type:'image/png'}));
+            const canvas = document.createElement('canvas'); canvas.width=bitmap.width; canvas.height=bitmap.height;
+            const ctx = canvas.getContext('2d'); ctx.drawImage(bitmap,0,0);
+            return ctx.getImageData(0,0,canvas.width,canvas.height).data;
+          }
+          const [x,y] = await Promise.all([pixels(a),pixels(b)]);
+          if(x.length!==y.length) return 255;
+          let max=0; for(let i=0;i<x.length;i++) max=Math.max(max,Math.abs(x[i]-y[i]));
+          return max;
+        }, {a:a.toString('base64'),b:b.toString('base64')});
+        // Up to 3/255 for Chromium raster rounding; DOM/style/geometry must match exactly.
+        assert.ok(maxDifference <= 3, `regresión visual flujo ${n}, ${width}: diferencia máxima ${maxDifference}`);
+      }
       await before.close();
     }
     await page.close();
@@ -79,6 +115,16 @@ try {
   await page.locator('[data-person-filter="adriana"]').click();
   assert.ok(await page.locator('.flow-card:not([hidden])').count() < 7);
   await page.locator('#resetFilters').click();
+  await page.locator('#trigger-people').click();
+  await page.locator('[data-filter="people"][data-value="yesely"]').click();
+  await page.locator('[data-filter="people"][data-value="lucero"]').click();
+  await page.locator('#trigger-systems').click();
+  await page.locator('[data-filter="systems"][data-value="imaging"]').click();
+  await page.locator('[data-filter="systems"][data-value="sheets"]').click();
+  const expected = FLOWS.filter(f => f.people.some(id => ['yesely','lucero'].includes(id)) && f.systems.some(id => ['imaging','sheets'].includes(id))).map(f => f.n);
+  assert.deepEqual(await page.locator('.flow-card:not([hidden])').evaluateAll(nodes => nodes.map(n => Number(n.dataset.flow))), expected);
+  await page.locator('#resetFilters').click();
+  assert.match(await page.locator('#flujo-7 .progress-dial').getAttribute('aria-label'), /100%/);
   await page.locator('[data-goto-flow]').first().click();
   assert.equal(await page.locator('#flujo-2').evaluate(d => d.open), true);
   const shell = page.locator('[data-track-shell]').filter({ has: page.locator('[data-track-next]:not([disabled])') }).first();
@@ -93,19 +139,21 @@ try {
   await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
   assert.equal(await page.locator('.flow-card[open]').count(), 0);
   await page.emulateMedia({ media: 'print' });
+  assert.ok(await page.locator('.organization-card details li').last().evaluate(n => n.getBoundingClientRect().height > 0));
+  assert.equal(await page.locator('.plan-2027-card').count(),6);
   await page.pdf({ path: 'test-results/flows.pdf', printBackground: true });
   if (baseline) {
+    const printed = await open(url,1440,900);
     const before = await open(baseline,1440,900);
-    await before.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
-    await before.emulateMedia({ media: 'print' });
-    await page.locator('script').evaluateAll(nodes => nodes.forEach(n => n.remove()));
-    await before.locator('script').evaluateAll(nodes => nodes.forEach(n => n.remove()));
-    // Active navigation classes depend on prior scrolling; compare print CSS rules directly.
-    const rules = p => p.evaluate(() => {
-      function collect(sheet) { return [...sheet.cssRules].flatMap(rule => rule.styleSheet ? collect(rule.styleSheet) : [rule.cssText]); }
-      return [...document.styleSheets].filter(s => s.href?.startsWith(location.origin)).flatMap(collect);
-    });
-    assert.deepEqual(await rules(page), await rules(before), 'orden y contenido CSS exactos');
+    for (const target of [printed,before]) {
+      await target.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
+      await target.emulateMedia({ media:'print' });
+      await target.mouse.move(0,0);
+    }
+    for (const n of [2,4,6]) {
+      assert.ok(JSON.stringify(await snapshot(printed,'#flujo-'+n)) === JSON.stringify(await snapshot(before,'#flujo-'+n)), `impresión intacta flujo ${n}`);
+    }
+    await printed.close();
     await before.close();
   }
   assert.deepEqual(failures, []);

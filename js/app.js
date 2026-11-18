@@ -1,3 +1,5 @@
+import { renderOrganization } from './components/organization.js';
+import { renderPlan2027 } from './components/plan-2027.js';
 import { setupDialog } from './components/dialog.js';
 import { renderFlow } from './components/flow-card.js';
 import { renderTeam, renderKpiAvatars, renderFooterSystems, renderHeadCounts } from './components/team-card.js';
@@ -17,6 +19,8 @@ function init() {
   renderFooterSystems();
   $('#flowsList').innerHTML = FLOWS.map(renderFlow).join('');
   renderTeam();
+  renderOrganization();
+  renderPlan2027();
 
   setupFilterEvents();
   setupFlowEvents();

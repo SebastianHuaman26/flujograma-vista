@@ -1,0 +1,24 @@
+.plan-2027-section { padding-top: 46px; scroll-margin-top: 90px; }
+.plan-2027-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.plan-2027-card { min-width: 0; padding: 22px; border: 1px solid var(--line); border-top: 3px solid var(--gold); border-radius: 16px; background: #fff; box-shadow: 0 4px 16px rgba(23,25,20,.03); }
+.plan-2027-card h3 { font-size: 16px; line-height: 1.45; margin-top: 10px; overflow-wrap: anywhere; }
+.plan-2027-card dl { margin: 16px 0; font-size: 12px; line-height: 1.6; }
+.plan-2027-card dl > div { padding: 8px 0; border-bottom: 1px solid var(--line); }
+.plan-2027-card dt { font-size: 10px; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+.plan-2027-card dd { margin: 3px 0 0; font-weight: 500; }
+.plan-2027-note { color: var(--muted); font-size: 11px; line-height: 1.8; margin-bottom: 20px; }
+.plan-2027-period { height: 6px; border-radius: 99px; background: var(--paper); overflow: hidden; }
+.plan-2027-period span { display: block; height: 100%; margin-left: var(--plan-start); width: var(--plan-span); background: var(--gold); border-radius: inherit; }
+.plan-2027-scale { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); margin-top: 8px; }
+.plan-2027-mobile-link { display: none; }
+@media (max-width: 767px) {
+  .plan-2027-grid { grid-template-columns: minmax(0, 1fr); }
+  .plan-2027-card { padding: 18px; }
+  .plan-2027-mobile-link { display: inline-flex; margin-top: 14px; }
+}
+@media print {
+  .plan-2027-section { padding-top: 20px; }
+  .plan-2027-section .project-link, .plan-2027-mobile-link { display: none; }
+  .plan-2027-grid { display: block; }
+  .plan-2027-card { box-shadow: none; break-inside: avoid; margin-bottom: 12px; padding: 12px; }
+}

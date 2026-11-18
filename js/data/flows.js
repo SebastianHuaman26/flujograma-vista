@@ -506,12 +506,12 @@ FLOWS.push({
   groupLabel: 'Proyectos',
   groups: ['proyectos'],
   tone: '#171914', toneBg: '#EDE9DF',
-  tagline: 'Dos frentes activos: la búsqueda histórica y consolidación de resoluciones académicas, y el despliegue del sistema de búsqueda para Secretaría General.',
+  tagline: 'Resoluciones Académicas: Proyecto 01 finalizado al 100 %. Proyecto 02: despliegue del sistema de búsqueda para Secretaría General.',
   people: ['grace', 'yomira', 'klaudia', 'sebastian'],
   systems: ['fileserver', 'imaging', 'sheets'],
-  duration: '2 proyectos activos',
+  duration: '1 finalizado · 1 en despliegue',
   frequency: 'Por fases',
-  status: 'En ejecución', statusTone: 'red',
+  status: 'Proyecto 01 finalizado · Proyecto 02 en despliegue', statusTone: 'gold',
   kind: 'projects',
   steps: [
     {
@@ -656,28 +656,30 @@ FLOWS.push({
     {
       name: 'Búsqueda histórica de resoluciones',
       tag: 'Proyecto 01',
-      status: 'En ejecución',
+      status: 'Finalizado',
       icon: 'fa-magnifying-glass',
       tone: '#E71230',
       detail: true,
       description: 'Organizar, digitalizar y centralizar las resoluciones académicas de admisión de Medicina, Enfermería, Estomatología y Tecnología Médica (pregrado, posgrado y residentado) mediante Google Drive y una base de datos vinculada, para facilitar la búsqueda, verificación y obtención de documentos en los procesos de titulación.',
       people: ['yomira', 'grace', 'klaudia'],
       systems: ['imaging', 'sheets'],
-      time: '50%',
-      timeNote: 'avance al 03/11/2026',
+      time: '100%',
+      timeNote: 'cierre global confirmado',
       scopeGroups: [
         { label: 'Carreras', items: ['Medicina', 'Enfermería', 'Estomatología', 'Tecnología Médica'] },
         { label: 'Niveles', items: ['Pregrado', 'Posgrado', 'Residentado'] },
         { label: 'Modalidades', items: ['Reincorporación / Reinicio', 'Cambio de carrera', 'Traslado interno y externo', 'Talento', 'Cambio de plan o carrera · 2004–2020'] }
       ],
       progress: {
-        percent: 50,
-        kicker: 'Avance reportado · 03/11/2026',
-        title: '2,076 de 2,500 archivos de alumnos revisados',
-        note: 'El porcentaje se conserva tal como fue reportado; el documento no explica cómo se calculó. Del segundo bloque no se indica la cantidad de archivos.',
+        percent: 100,
+        kicker: 'Proyecto finalizado',
+        title: 'Resoluciones Académicas · 100 %',
+        note: 'Cierre global confirmado. No se ha informado una fecha exacta de finalización ni cantidades definitivas por etapa. Las actividades siguientes se conservan como historial.',
         blocks: [
-          { label: 'Primer bloque', note: '2,076 archivos · revisión completada', state: 'done' },
-          { label: 'Segundo bloque', note: 'Recibido 29/10 · revisión iniciada 03/11', state: 'now' }
+          { label: 'Estado actual', note: 'Finalizado al 100 %', state: 'done' },
+          { label: 'Antecedente histórico · primera tarea', note: '50 % reportado · primer bloque: 2,076 archivos revisados de un universo registrado de 2,500 documentos · segundo bloque: 385 archivos', state: 'history' },
+          { label: 'Antecedente histórico · segunda tarea', note: '15 % reportado · 1,936 resoluciones de cronogramas de admisión', state: 'history' },
+          { label: 'Antecedente histórico · tercera tarea', note: '25 % reportado · 610 resoluciones de alumnos ingresantes', state: 'history' }
         ]
       },
       teamWork: {
@@ -697,12 +699,12 @@ FLOWS.push({
         note: 'Klaudia prepara listados editables de alumnos en Excel, con pestañas por modalidad y programa, mientras Yomira y Grace revisan y clasifican las resoluciones por años distintos. La consolidación del paso 06 reúne ambos trabajos.'
       },
       extra: {
-        kicker: 'Línea adicional',
+        kicker: 'Historial · línea adicional',
         title: 'Cronogramas de admisión',
         from: 'Se desprende del paso 02',
-        status: 'Revisión iniciada',
+        status: 'Antecedente histórico',
         stepIds: ['f7s11', 'f7s12', 'f7s13', 'f7s14'],
-        note: 'La diapositiva marca la segunda tarea como pendiente de ejecución; el reporte del 03/11/2026 indica que se recibieron los documentos UPCH de los cronogramas solicitados (brindados por Martín Carbajo) y comenzó su revisión. La culminación del flujo completo no está confirmada.'
+        note: 'La diapositiva marca la segunda tarea como pendiente de ejecución; el reporte del 03/11/2026 indica que se recibieron los documentos UPCH de los cronogramas solicitados (brindados por Martín Carbajo) y comenzó su revisión. Este es un antecedente histórico; el proyecto global está finalizado al 100 %, sin resultados individuales finales documentados.'
       },
       difficulties: {
         label: 'Hallazgos',
@@ -730,8 +732,8 @@ FLOWS.push({
         ]
       },
       nextSteps: {
-        label: 'Próximos pasos',
-        title: 'Ruta para cerrar el proyecto',
+        label: 'Historial de planificación',
+        title: 'Ruta prevista antes del cierre global',
         items: [
           { icon: 'fa-list-check', text: 'Continuar revisión y clasificación' },
           { icon: 'fa-link', text: 'Completar y validar enlaces en Drive' },
@@ -740,7 +742,7 @@ FLOWS.push({
           { icon: 'fa-calendar-days', text: 'Iniciar segunda tarea y completar su base' }
         ]
       },
-      foot: 'Avance reportado al 03/11/2026 · 50 % · primer bloque completado (2,076 archivos) · segundo bloque en revisión',
+      foot: 'Proyecto finalizado al 100 % · actividades y cifras parciales conservadas como antecedentes históricos',
       footIcon: 'fa-chart-simple',
       link: {
         label: 'Ver presentación',
@@ -769,7 +771,7 @@ FLOWS.push({
     }
   ],
   footer: {
-    text: 'Proyecto 01: 50 % de avance reportado al 03/11/2026 (2,076 de 2,500 archivos de alumnos); segundo bloque recibido el 29/10 y en revisión desde el 03/11. Proyecto 02: 8–10 días, con cierre objetivo a 10 días.'
+    text: 'Proyecto 01: Finalizado al 100 %; sin fecha exacta de cierre ni cantidades finales por etapa informadas. Proyecto 02: 8–10 días, con cierre objetivo a 10 días.'
   }
 });
 
