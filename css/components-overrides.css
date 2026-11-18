@@ -92,6 +92,11 @@
 .progress-block-dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 4px; flex: 0 0 auto; background: var(--gold); }
 .progress-block--done .progress-block-dot { background: #17A356; box-shadow: 0 0 0 3px rgba(23,163,86,.16); }
 .progress-block--now .progress-block-dot { background: var(--gold); box-shadow: 0 0 0 3px rgba(248,184,0,.16); animation: pulse 2.4s ease-in-out infinite; }
+.project-progress--complete .progress-dial { background: conic-gradient(#17A356 calc(var(--p, 0) * 1%), rgba(255,255,255,.13) 0); }
+.project-progress--complete .progress-track span { background: linear-gradient(90deg, #17A356, #76D39A); }
+.project-progress--active .progress-dial { background: conic-gradient(var(--gold) calc(var(--p, 0) * 1%), rgba(255,255,255,.13) 0); }
+.project-progress-list { display: flex; flex-direction: column; gap: 9px; }
+.project-progress-context { color: var(--muted); font-size: 10px; line-height: 1.5; }
 .progress-block b { display: block; color: rgba(255,255,255,.82); font-size: 9.5px; font-weight: 600; }
 .progress-block small { display: block; color: rgba(255,255,255,.42); font-size: 9px; line-height: 1.4; }
 

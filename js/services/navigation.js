@@ -46,6 +46,23 @@ function setActiveFlow(n) {
   });
 }
 
+const NAV_SECTIONS = [
+  ['flujos', '#flujos'],
+  ['flujo-7', '#flujo-7'],
+  ['plan-2027', '#plan-2027'],
+  ['organization', '#organization'],
+  ['equipo', '#equipo']
+];
+
+function setActiveNav(id) {
+  $$('.nav-links a[href^="#"]').forEach(link => {
+    const active = link.getAttribute('href') === `#${id}`;
+    link.classList.toggle('is-active', active);
+    if (active) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  });
+}
+
 function focusAfterScroll(node) {
   if (!node) return;
   const focus = () => node.focus({ preventScroll: true });
@@ -126,14 +143,48 @@ function setupFlowEvents() {
 
 function setupObserver() {
   if (!('IntersectionObserver' in window)) return;
+  const activeSections = new Set();
+  let scheduled = false;
+  const syncActiveNav = () => {
+    scheduled = false;
+    const priority = ['equipo', 'organization', 'plan-2027', 'flujo-7', 'flujos'];
+    const selected = priority.find(id => activeSections.has(id));
+    if (selected) setActiveNav(selected);
+  };
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting && !entry.target.hidden) {
+        activeSections.add(entry.target.id);
+      } else {
+        activeSections.delete(entry.target.id);
+      }
+      if (entry.target.classList.contains('flow-card')) {
+        if (entry.isIntersecting && !entry.target.hidden) {
         setActiveFlow(entry.target.dataset.flow);
+        }
       }
     });
-  }, { rootMargin: '-100px 0px -66% 0px', threshold: 0 });
+    if (!scheduled) {
+      scheduled = true;
+      requestAnimationFrame(syncActiveNav);
+    }
+  }, { rootMargin: '-86px 0px -72% 0px', threshold: 0 });
   $$('#flowsList .flow-card').forEach(card => observer.observe(card));
+  NAV_SECTIONS.forEach(([id]) => {
+    const section = document.getElementById(id);
+    if (section) observer.observe(section);
+  });
+  const syncFromHash = () => {
+    const id = location.hash.slice(1);
+    if (NAV_SECTIONS.some(([sectionId]) => sectionId === id)) setActiveNav(id);
+  };
+  window.addEventListener('hashchange', syncFromHash);
+  window.addEventListener('popstate', syncFromHash);
+  $$('.nav-links a').forEach(link => link.addEventListener('click', () => {
+    const id = link.hash.slice(1);
+    setActiveNav(id);
+  }));
+  syncFromHash();
 }
 
 function setupTrackNav() {

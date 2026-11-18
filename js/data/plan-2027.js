@@ -51,7 +51,7 @@ export const PLAN_2027 = [
   },
   {
     "id": 3,
-    "title": "Digitalización de expedientes FAEN",
+    "title": "Digitalización de expedientes FAENF",
     "start": "2026-10-20",
     "end": "2027-11-25",
     "duration": "274 días laborables",
@@ -134,7 +134,7 @@ export const PLAN_2027 = [
   },
   {
     "id": 6,
-    "title": "Unificación de expedientes administrativos, inventario documental y propuesta para eliminación FAEN — I etapa",
+    "title": "Unificación de expedientes administrativos, inventario documental y propuesta para eliminación FAENF — I etapa",
     "start": "2027-04-28",
     "end": "2027-08-31",
     "duration": "77 días laborables",

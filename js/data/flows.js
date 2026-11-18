@@ -670,18 +670,38 @@ FLOWS.push({
         { label: 'Niveles', items: ['Pregrado', 'Posgrado', 'Residentado'] },
         { label: 'Modalidades', items: ['Reincorporación / Reinicio', 'Cambio de carrera', 'Traslado interno y externo', 'Talento', 'Cambio de plan o carrera · 2004–2020'] }
       ],
-      progress: {
-        percent: 100,
-        kicker: 'Proyecto finalizado',
-        title: 'Resoluciones Académicas · 100 %',
-        note: 'Cierre global confirmado. No se ha informado una fecha exacta de finalización ni cantidades definitivas por etapa. Las actividades siguientes se conservan como historial.',
-        blocks: [
-          { label: 'Estado actual', note: 'Finalizado al 100 %', state: 'done' },
-          { label: 'Antecedente histórico · primera tarea', note: '50 % reportado · primer bloque: 2,076 archivos revisados de un universo registrado de 2,500 documentos · segundo bloque: 385 archivos', state: 'history' },
-          { label: 'Antecedente histórico · segunda tarea', note: '15 % reportado · 1,936 resoluciones de cronogramas de admisión', state: 'history' },
-          { label: 'Antecedente histórico · tercera tarea', note: '25 % reportado · 610 resoluciones de alumnos ingresantes', state: 'history' }
-        ]
-      },
+      activityProgress: [
+        {
+          percent: 100, kicker: 'Actividad 01 · Ejecutada', title: 'Base de datos de admisiones por distintas modalidades',
+          note: 'Revisión, clasificación, renombrado, organización, carga documental y elaboración de bases de datos.',
+          blocks: [
+            { label: 'Primer bloque', note: '2.076 resoluciones revisadas · recibido 26/10/2026', state: 'done' },
+            { label: 'Segundo bloque', note: '385 resoluciones · completado · recibido 04/11/2026', state: 'done' },
+            { label: 'Tercer bloque', note: '6 resoluciones de 2002 · completado · recibido 18/11/2026', state: 'done' },
+            { label: 'Cobertura declarada', note: '1998–2024 · la fuente anota “No incluye 2002, 2025 y 2026”; también reporta el tercer bloque de 2002.', state: 'history' }
+          ]
+        },
+        {
+          percent: 100, kicker: 'Actividad 02 · Ejecutada', title: 'Cronogramas de admisión',
+          note: 'Revisión, clasificación, organización, carga documental y elaboración de bases de datos.',
+          blocks: [
+            { label: 'Volumen y periodo', note: '1.936 resoluciones · periodo documental 2015–2024', state: 'done' },
+            { label: 'Recepción', note: '04/11/2026', state: 'done' }
+          ]
+        },
+        {
+          percent: 35, kicker: 'Actividad 03 · En ejecución según el reporte', title: 'Consolidación del listado de alumnos para su comparación con el listado oficial de alumnos',
+          note: 'Consolidación de Excel en curso. El cruce con la base de datos se realizará al finalizar la consolidación.',
+          blocks: [
+            { label: 'Volumen', note: '610 resoluciones de alumnos ingresantes', state: 'now' },
+            { label: 'Trabajo en curso', note: 'Revisión, organización, carga documental y elaboración de bases de datos.', state: 'now' },
+            { label: 'Recepción 18/11/2026', note: 'Conglomerado de resoluciones, cartas y cronogramas de 1999–2009', state: 'history' },
+            { label: 'Fecha estimada de término', note: '04/12/2026 · estimada, no confirmada', state: 'history' }
+          ]
+        }
+      ],
+      estimatedEnd: '2026-12-04',
+      progressContext: 'Estado global del Proyecto 01: finalizado al 100 % según confirmación previa del usuario. Los porcentajes 100 %, 100 % y 35 % corresponden a actividades de este nuevo reporte y se muestran por separado; no representan un nuevo cálculo del avance global.',
       teamWork: {
         label: 'Equipo',
         title: 'Años y frentes asignados',
@@ -704,7 +724,7 @@ FLOWS.push({
         from: 'Se desprende del paso 02',
         status: 'Antecedente histórico',
         stepIds: ['f7s11', 'f7s12', 'f7s13', 'f7s14'],
-        note: 'La diapositiva marca la segunda tarea como pendiente de ejecución; el reporte del 03/11/2026 indica que se recibieron los documentos UPCH de los cronogramas solicitados (brindados por Martín Carbajo) y comenzó su revisión. Este es un antecedente histórico; el proyecto global está finalizado al 100 %, sin resultados individuales finales documentados.'
+        note: 'Reporte previo del 03/11/2026: recepción de los documentos UPCH para cronogramas e inicio de revisión. El nuevo reporte informa esta actividad al 100 %; se conserva aquí la trazabilidad del antecedente.'
       },
       difficulties: {
         label: 'Hallazgos',
@@ -742,7 +762,7 @@ FLOWS.push({
           { icon: 'fa-calendar-days', text: 'Iniciar segunda tarea y completar su base' }
         ]
       },
-      foot: 'Proyecto finalizado al 100 % · actividades y cifras parciales conservadas como antecedentes históricos',
+      foot: 'Proyecto finalizado globalmente al 100 % según confirmación previa · reporte de actividades: 100 %, 100 % y 35 %; término 04/12/2026 estimado, no confirmado',
       footIcon: 'fa-chart-simple',
       link: {
         label: 'Ver presentación',

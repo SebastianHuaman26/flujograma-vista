@@ -36,7 +36,45 @@ try {
     const page = await open(url, width, height);
     assert.equal(await page.locator('.flow-card').count(), 7);
     assert.equal(await page.locator('.plan-2027-card').count(),6);
+    const activityPanels = page.locator('#flujo-7 .project-card--detail .project-progress');
+    assert.equal(await activityPanels.count(),3);
+    assert.deepEqual(await activityPanels.evaluateAll(nodes => nodes.map(node => Number(node.dataset.progress))),[100,100,35]);
+    assert.deepEqual((await activityPanels.locator('.progress-value').allTextContents()).map(value => value.replace(/\s/g,'')),['100%','100%','35%']);
+    const panelMetrics = await activityPanels.evaluateAll(nodes => nodes.map(node => {
+      const panel = node.getBoundingClientRect();
+      const track = node.querySelector('.progress-track span');
+      return { visible: getComputedStyle(node).display !== 'none' && panel.width > 0 && panel.height > 0,
+        p: getComputedStyle(node).getPropertyValue('--p').trim(),
+        trackWidth: track.getBoundingClientRect().width,
+        trackTotal: track.parentElement.getBoundingClientRect().width };
+    }));
+    assert.ok(panelMetrics.every(metric => metric.visible));
+    assert.deepEqual(panelMetrics.map(metric => Number(metric.p)),[100,100,35]);
+    assert.ok(panelMetrics[0].trackWidth >= panelMetrics[0].trackTotal - 1);
+    assert.ok(panelMetrics[1].trackWidth >= panelMetrics[1].trackTotal - 1);
+    assert.ok(Math.abs(panelMetrics[2].trackWidth / panelMetrics[2].trackTotal - .35) < .02);
+    assert.equal(await page.locator('#flujo-7').getByText('04/12/2026 · estimada, no confirmada').count(),1);
+    assert.ok(await page.locator('#flujo-7').getByText('No incluye 2002, 2025 y 2026').count());
     assert.equal(await page.locator('.organization-card').count(),4);
+    const planCards = page.locator('.plan-2027-card');
+    const planCardTops = await planCards.evaluateAll(nodes => nodes.slice(0,2).map(node => node.getBoundingClientRect().top));
+    assert.ok(Math.abs(planCardTops[0] - planCardTops[1]) < 1, 'Actividades 01 y 02 comienzan alineadas');
+    const stagePill = page.locator('.plan-2027-stage-pill');
+    assert.equal(await stagePill.getAttribute('class'), 'status-pill status-pill--live plan-2027-stage-pill');
+    assert.equal(await stagePill.evaluate(node => node.parentElement.classList.contains('plan-2027-stage-row') && !node.closest('.plan-2027-card')), true);
+    assert.equal(await stagePill.evaluate(node => getComputedStyle(node).backgroundColor), 'rgb(248, 184, 0)');
+    assert.equal(await stagePill.evaluate(node => getComputedStyle(node).fontSize), '11px');
+    assert.equal(await page.locator('#plan2027Title').textContent(),'Plan de Trabajo Diciembre 2026-2027');
+    assert.equal(await page.locator('.plan-2027-card .plan-2027-stage').count(),0);
+    assert.equal(await page.locator('#organization').getByText('Consultar 13 funciones').count(),1);
+    assert.equal(await page.locator('#organization').count(),1);
+    assert.equal(await page.locator('#equipo #organization').count(),0);
+    assert.equal(await page.locator('main > #plan-2027 + #organization + #equipo').count(),1);
+    assert.equal(await page.locator('.nav-links a').allTextContents(),['Flujos','Proyectos','Plan 2027','Organigrama','Equipo']);
+    assert.equal(await page.locator('.nav-links a[href="#organization"]').count(),1);
+    assert.equal(await page.locator('#organization h2#organizationTitle').textContent(),'Organigrama funcional');
+    await page.locator('.nav-links a[href="#organization"]').click();
+    assert.ok(Math.abs(await page.locator('#organization').evaluate(n => n.getBoundingClientRect().top) - 86) < 3);
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     for (const text of ['Ver organigrama','Ver plan 2027']) {
       const link = page.getByRole('link',{name:text, exact:true});
@@ -139,6 +177,8 @@ try {
   await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
   assert.equal(await page.locator('.flow-card[open]').count(), 0);
   await page.emulateMedia({ media: 'print' });
+  assert.equal(await page.locator('#flujo-7 .project-card--detail .project-progress').count(),3);
+  assert.deepEqual(await page.locator('#flujo-7 .project-card--detail .project-progress').evaluateAll(nodes => nodes.map(node => Number(node.dataset.progress))),[100,100,35]);
   assert.ok(await page.locator('.organization-card details li').last().evaluate(n => n.getBoundingClientRect().height > 0));
   assert.equal(await page.locator('.plan-2027-card').count(),6);
   await page.pdf({ path: 'test-results/flows.pdf', printBackground: true });

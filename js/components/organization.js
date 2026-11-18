@@ -16,7 +16,7 @@ function roleCard(role) {
 export function renderOrganization() {
   document.getElementById('organization').innerHTML = `
     <div class="section-head">
-      <div><span class="section-eyebrow">Archivo FAMEE · Facultades Integradas</span><h3 id="organizationTitle">Organigrama funcional</h3><p>Funciones por cargo y dependencia jerárquica, sin asignaciones nominales.</p></div>
+      <div><span class="section-eyebrow">Archivo FAMEE · Facultades Integradas</span><h2 id="organizationTitle">Organigrama funcional</h2><p>Funciones por cargo y dependencia jerárquica, sin asignaciones nominales.</p></div>
       <a class="project-link" href="https://docs.google.com/document/d/1ZsvacVqIgq_-iCaKCMDvYzJR1gbJ518U/edit?usp=drive_link&amp;ouid=113476078554077449725&amp;rtpof=true&amp;sd=true" target="_blank" rel="noopener noreferrer">Ver organigrama <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
     </div>
     <ul class="organization-level organization-root">${ORGANIZATION.filter(role => !role.parent).map(roleCard).join('')}</ul>`;

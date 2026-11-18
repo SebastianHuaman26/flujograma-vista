@@ -164,6 +164,25 @@ function dimMatchables() {
   });
 }
 
+function filterFlow07Projects() {
+  const flow = $('#flujo-7');
+  if (!flow) return;
+  const cards = $$('.project-card', flow);
+  const peopleFilterActive = state.people.size > 0;
+  let visibleCount = 0;
+  cards.forEach(card => {
+    const people = (card.dataset.people || '').split(',').filter(Boolean);
+    const show = !peopleFilterActive || people.some(id => state.people.has(id));
+    card.hidden = !show;
+    if (show) {
+      visibleCount++;
+      card.classList.remove('is-muted');
+    }
+  });
+  const count = $('.flow-count', flow);
+  if (count) count.textContent = `${peopleFilterActive ? visibleCount : cards.length} proyectos`;
+}
+
 function printFilterSummary(visibleCount) {
   if (!hasActiveFilters()) {
     return `Mapa completo · ${TOTAL_FLOWS} flujos · sin filtros aplicados`;
@@ -204,6 +223,7 @@ function applyFilters() {
   $('#filterResult').classList.toggle('is-filtered', hasEntityFilters());
 
   dimMatchables();
+  filterFlow07Projects();
   renderChips();
   syncFilterUI();
 }

@@ -54,6 +54,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { PLAN_2027 } from '../js/data/plan-2027.js';
 import { ORGANIZATION } from '../js/data/organization.js';
+import { renderProjectDetail } from '../js/components/project-card.js';
 const original = JSON.parse(readFileSync(new URL('./fixtures/preserved.json', import.meta.url)));
 const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 test('flujos 01–06, FAENF, personas, catálogos, pasos históricos y Proyecto 02 intactos', () => {
@@ -66,22 +67,39 @@ test('flujos 01–06, FAENF, personas, catálogos, pasos históricos y Proyecto 
   assert.equal(hash(FLOWS[6].steps), original.steps7);
   assert.equal(hash(FLOWS[6].projects[0].link), original.link);
 });
-test('Proyecto 01 finalizado, con historial explícito y sin fecha de cierre inventada', () => {
+test('Proyecto 01 globalmente finalizado con tres avances específicos del reporte nuevo', () => {
   const project = FLOWS[6].projects[0];
   assert.equal(project.status, 'Finalizado');
   assert.equal(project.time, '100%');
-  assert.equal(project.progress.percent, 100);
-  assert.equal(project.progress.blocks.filter(b => b.state === 'history').length, 3);
+  assert.deepEqual(project.activityProgress.map(activity => activity.percent), [100, 100, 35]);
+  assert.match(project.progressContext, /global.*100 %/i);
+  assert.match(project.activityProgress[0].blocks[3].note, /No incluye 2002/);
+  assert.match(project.activityProgress[0].blocks[2].note, /6 resoluciones de 2002/);
+  assert.match(project.activityProgress[1].blocks[0].note, /1\.936 resoluciones/);
+  assert.match(project.activityProgress[2].title, /Consolidación del listado de alumnos/);
+  assert.match(project.activityProgress[2].blocks[0].note, /610 resoluciones/);
+  assert.equal(project.estimatedEnd, '2026-12-04');
+  const html = renderProjectDetail(project);
+  const panels = [...html.matchAll(/<div class="project-progress [^"]*" style="--p:(\d+)" data-progress="(\d+)">/g)];
+  assert.equal(panels.length, 3);
+  assert.deepEqual(panels.map(([, cssValue, dataValue]) => [Number(cssValue), Number(dataValue)]), [[100,100],[100,100],[35,35]]);
+  assert.equal((html.match(/class="progress-dial"/g) || []).length, 3);
+  assert.equal((html.match(/class="progress-track"/g) || []).length, 3);
+  assert.match(html, /Fecha estimada de término: 04\/12\/2026/);
+  assert.doesNotMatch(html, /50 % reportado|15 % reportado|25 % reportado/);
   assert.ok(!FLOWS[6].duration.includes('2 proyectos activos'));
-  assert.match(project.progress.note, /No se ha informado una fecha exacta/);
 });
 test('organigrama sin titulares inventados y con las funciones oficiales', () => {
   assert.deepEqual(ORGANIZATION.map(r => r.parent), [null, 'secretaria', 'supervisor', 'supervisor']);
-  assert.deepEqual(ORGANIZATION.map(r => r.functions.length), [0, 12, 12, 7]);
+  assert.deepEqual(ORGANIZATION.map(r => r.functions.length), [0, 12, 13, 7]);
+  assert.equal(ORGANIZATION.find(r => r.id === 'auxiliar').functions[0], 'Recepción de documentos y verificación.');
   assert.ok(ORGANIZATION.every(r => !('person' in r)));
 });
 test('seis actividades independientes, fechas y cifras oficiales sin avances ficticios', () => {
   assert.equal(PLAN_2027.length, 6);
+  assert.equal(PLAN_2027[2].title, 'Digitalización de expedientes FAENF');
+  assert.equal(PLAN_2027[5].title, 'Unificación de expedientes administrativos, inventario documental y propuesta para eliminación FAENF — I etapa');
+  assert.ok(PLAN_2027.every(activity => !/\bFAEN\b/.test(activity.title)));
   assert.deepEqual(PLAN_2027.map(a => [a.start,a.end,a.duration]), [
     ['2026-12-01','2027-04-27','98 días laborables'],
     ['2026-11-25','2026-12-15','4 semanas'],

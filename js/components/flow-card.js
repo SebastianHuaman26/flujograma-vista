@@ -53,7 +53,7 @@ function renderFlow(flow) {
         ${flow.footer.flow ? `<button type="button" class="inline-link" data-goto-flow="${esc(flow.footer.flow)}">${esc(flow.footer.linkLabel)} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>` : ''}
       </div>`
     : '';
-  return `<details class="flow-card" id="flujo-${Number(flow.n)}" data-flow="${Number(flow.n)}" style="--tone:${flow.tone};--tone-bg:${flow.toneBg}" open>
+  return `<details class="flow-card" id="flujo-${Number(flow.n)}" data-flow="${Number(flow.n)}" style="--tone:${flow.tone};--tone-bg:${flow.toneBg}">
     <summary class="flow-summary">
       <span class="flow-id">${pad2(flow.n)}</span>
       <span class="flow-head-copy">

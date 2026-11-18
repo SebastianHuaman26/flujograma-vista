@@ -30,6 +30,7 @@ export const ORGANIZATION = [
     "title": "Auxiliar de Archivo",
     "parent": "supervisor",
     "functions": [
+      "Recepción de documentos y verificación.",
       "Clasificar y ordenar documentos.",
       "Preparar documentación para digitalización, conservación, resguardo o eliminación.",
       "Coordinar con el supervisor los traslados y retornos documentales.",

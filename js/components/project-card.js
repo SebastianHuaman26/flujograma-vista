@@ -71,7 +71,8 @@ function projectFoot(project) {
 function renderProjectProgress(progress) {
   if (!progress) return '';
   const percent = Number(progress.percent) || 0;
-  return `<div class="project-progress" style="--p:${percent}">
+  const stateClass = percent === 100 ? 'project-progress--complete' : 'project-progress--active';
+  return `<div class="project-progress ${stateClass}" style="--p:${percent}" data-progress="${percent}">
     <div class="progress-dial" role="img" aria-label="${percent}% de avance reportado">
       <span class="progress-value">${percent}<small>%</small></span>
     </div>
@@ -85,6 +86,18 @@ function renderProjectProgress(progress) {
       ${progress.blocks.map(block => `<span class="progress-block progress-block--${esc(block.state)}"><span class="progress-block-dot"></span><span><b>${esc(block.label)}</b><small>${esc(block.note)}</small></span></span>`).join('')}
     </div>
   </div>`;
+}
+
+function renderProjectProgressList(progressList, context) {
+  if (!progressList?.length) return '';
+  return `<div class="project-progress-list">${progressList.map(renderProjectProgress).join('')}</div>
+    ${context ? `<p class="project-progress-context">${esc(context)}</p>` : ''}`;
+}
+
+function renderEstimatedEnd(project) {
+  if (!project.estimatedEnd) return '';
+  const [year, month, date] = project.estimatedEnd.split('-');
+  return `<p class="project-progress-context">Fecha estimada de término: ${date}/${month}/${year}</p>`;
 }
 
 function renderProjectLane(lane) {
@@ -141,7 +154,8 @@ function renderProjectDetail(project) {
     ${projectMeta(project)}
     ${projectScope(project)}
     <div class="project-detail">
-      ${renderProjectProgress(project.progress)}
+      ${renderProjectProgressList(project.activityProgress, project.progressContext)}
+      ${renderEstimatedEnd(project)}
       ${projectCoverage(project.teamWork)}
       <div class="project-flow-block">
         <div class="project-block-head">

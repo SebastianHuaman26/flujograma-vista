@@ -121,7 +121,7 @@ El **Organigrama funcional** se incorpora dentro de Equipo de archivo, después 
 
 El **Plan de Trabajo 2027**, entre el mapa y el equipo, contiene seis actividades independientes, sus volúmenes, recursos, productividad y fechas estimadas. No constituye un octavo flujo ni modifica los proyectos del flujo 07. Sus periodos son programación, no porcentajes de avance. Los datos son estáticos: no se actualizan automáticamente ni se recalculan las fechas a partir de la productividad.
 
-Terminología: FAMED = Facultad de Medicina; FAENF = Facultad de Enfermería; FAEST = Facultad de Estomatología; FAMEE = Facultades Integradas. **FAEN se conserva literalmente como aparece en el plan; no se ha confirmado su equivalencia con FAENF.** Las productividades indicadas en hojas/mes se conservan aunque el volumen se exprese en expedientes. La capacitación no incluye una cantidad ni nombres de responsables: solo se indica Personal de Archivo.
+Terminología: FAMED = Facultad de Medicina; FAENF = Facultad de Enfermería; FAEST = Facultad de Estomatología; FAMEE = Facultades Integradas. Las productividades indicadas en hojas/mes se conservan aunque el volumen se exprese en expedientes. La capacitación no incluye una cantidad ni nombres de responsables: solo se indica Personal de Archivo.
 
 El Proyecto 01 de Resoluciones Académicas está **Finalizado al 100 %**, por confirmación expresa. Se conservan como historial sus pasos y reportes parciales de 50 %, 15 % y 25 %. No se declara fecha exacta de cierre, cantidades definitivas ni cierre individual de tareas sin evidencia. El Proyecto 02 conserva íntegramente sus datos y estado.
 
@@ -131,7 +131,7 @@ Módulos añadidos:
 - `js/data/plan-2027.js` y `js/components/plan-2027.js`: programación y tarjetas del plan.
 - `css/organization.css`, `css/plan-2027.css` y `css/project-completion.css`: estilos específicos, responsive e impresión, importados después de los estilos originales.
 
-Para actualizar estos contenidos, editar sus módulos de datos y contrastar las cifras con la fuente autorizada. No identificar FAEN con FAENF, asignar personas a recursos anónimos ni convertir metas en avances reales. Los botones «Ver organigrama» y «Ver plan 2027» enlazan a los documentos proporcionados; «Ver presentación» conserva su URL original.
+Para actualizar estos contenidos, editar sus módulos de datos y contrastar las cifras con la fuente autorizada. No asignar personas a recursos anónimos ni convertir metas en avances reales. Los botones «Ver organigrama» y «Ver plan 2027» enlazan a los documentos proporcionados; «Ver presentación» conserva su URL original.
 
 ### Protección y regresión
 
