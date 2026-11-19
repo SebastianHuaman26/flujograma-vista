@@ -7,6 +7,25 @@ import { pad2, esc } from '../utils/helpers.js';
 
 let lastDialogTrigger = null;
 
+const RESOLUTION_TYPES = [
+  { name: 'Alumnos', description: 'Resoluciones vinculadas con estudiantes y procesos académicos de ingreso o admisión.', examples: ['Reincorporación o reinicio', 'Cambio de carrera', 'Traslado interno', 'Traslado externo', 'Ingreso por talento', 'Cambio de plan o carrera'] },
+  { name: 'Docentes', description: 'Resoluciones clasificadas en la categoría documental de docentes. Se relacionan con asuntos del personal docente, sin precisar trámites específicos.' },
+  { name: 'Plan Curricular', description: 'Resoluciones clasificadas bajo Plan Curricular, relativas a asuntos de organización curricular.' },
+  { name: 'Plan de Estudios', description: 'Resoluciones clasificadas bajo Plan de Estudios, relacionadas con la estructura académica de los estudios.' },
+  { name: 'UPCH', description: 'Resoluciones de clasificación institucional UPCH, sin atribuir competencias ni actos específicos.' },
+  { name: 'Convenios', description: 'Resoluciones clasificadas en Convenios, relacionadas con acuerdos o convenios institucionales.' }
+];
+
+function openResolutionTypes(trigger) {
+  const dialog = $('#stepDialog');
+  lastDialogTrigger = trigger instanceof HTMLElement ? trigger : null;
+  const rows = RESOLUTION_TYPES.map(type => `<div class="resolution-type-row"><strong>${esc(type.name)}</strong><div><p>${esc(type.description)}</p>${type.examples ? `<ul>${type.examples.map(example => `<li>${esc(example)}</li>`).join('')}</ul>` : ''}</div></div>`).join('');
+  $('#dialogContent').innerHTML = `<div class="dialog-top" style="--tone:#F8B800"><span class="dialog-kicker">Clasificación documental</span><h3 class="dialog-title" id="dialogTitle">Tipos de resoluciones del archivo</h3><p class="dialog-flow">Clasificación documental y descripción de las resoluciones gestionadas por el archivo</p></div><div class="dialog-body dialog-body--resolution-types"><div class="resolution-type-table"><div class="resolution-type-head"><strong>Tipo de resolución</strong><strong>De qué trata</strong></div>${rows}</div><p class="resolution-type-note">Clasificación referencial basada en las categorías de indexación de Resoluciones SEGEN y las modalidades de admisión documentadas en el Proyecto 01.</p><div class="dialog-actions"><span class="dialog-hint">Seis categorías documentales</span><button type="button" class="dialog-cta" data-close-dialog>Cerrar</button></div></div>`;
+  if (!dialog.open) dialog.showModal();
+  $('.dialog-card', dialog).scrollTop = 0;
+  document.body.classList.add('is-locked');
+}
+
 function openStep(id, ownerOverride, nOverride) {
   const step = STEP_MAP[id];
   if (!step) return;
@@ -126,6 +145,11 @@ function setupDialog() {
     document.body.classList.add('is-locked');
   });
   closeButton.addEventListener('click', closeDialog);
+  document.addEventListener('click', event => {
+    const trigger = event.target.closest('[data-dialog-resolution-types]');
+    if (trigger) openResolutionTypes(trigger);
+    if (event.target.closest('[data-close-dialog]')) closeDialog();
+  });
   dialog.addEventListener('cancel', () => {
     document.body.classList.remove('is-locked');
   });
@@ -142,4 +166,4 @@ function setupDialog() {
 }
 
 
-export { openStep, closeDialog, setupDialog };
+export { openStep, openResolutionTypes, closeDialog, setupDialog, RESOLUTION_TYPES };

@@ -506,7 +506,7 @@ FLOWS.push({
   groupLabel: 'Proyectos',
   groups: ['proyectos'],
   tone: '#171914', toneBg: '#EDE9DF',
-  tagline: 'Resoluciones Académicas: Proyecto 01 finalizado al 100 %. Proyecto 02: despliegue del sistema de búsqueda para Secretaría General.',
+  tagline: 'Resoluciones Académicas: Proyecto 01 con avance global calculado de 78.33 %. Proyecto 02: despliegue del sistema de búsqueda para Secretaría General.',
   people: ['grace', 'yomira', 'klaudia', 'sebastian'],
   systems: ['fileserver', 'imaging', 'sheets'],
   duration: '1 finalizado · 1 en despliegue',
@@ -663,8 +663,8 @@ FLOWS.push({
       description: 'Organizar, digitalizar y centralizar las resoluciones académicas de admisión de Medicina, Enfermería, Estomatología y Tecnología Médica (pregrado, posgrado y residentado) mediante Google Drive y una base de datos vinculada, para facilitar la búsqueda, verificación y obtención de documentos en los procesos de titulación.',
       people: ['yomira', 'grace', 'klaudia'],
       systems: ['imaging', 'sheets'],
-      time: '100%',
-      timeNote: 'cierre global confirmado',
+      time: '78.33%',
+      timeNote: 'promedio simple de las actividades reportadas',
       scopeGroups: [
         { label: 'Carreras', items: ['Medicina', 'Enfermería', 'Estomatología', 'Tecnología Médica'] },
         { label: 'Niveles', items: ['Pregrado', 'Posgrado', 'Residentado'] },
@@ -690,8 +690,9 @@ FLOWS.push({
           ]
         },
         {
-          percent: 35, kicker: 'Actividad 03 · En ejecución según el reporte', title: 'Consolidación del listado de alumnos para su comparación con el listado oficial de alumnos',
+          id: 'actividad-03-consolidacion', percent: 35, kicker: 'Actividad 03 · En ejecución según el reporte', title: 'Consolidación del listado de alumnos para su comparación con el listado oficial de alumnos',
           note: 'Consolidación de Excel en curso. El cruce con la base de datos se realizará al finalizar la consolidación.',
+          actions: { excelUrl: 'https://drive.google.com/drive/u/2/folders/1Tel4dZ2zFcSjjiIU_9gZ-yObuZjwrgYR' },
           blocks: [
             { label: 'Volumen', note: '610 resoluciones de alumnos ingresantes', state: 'now' },
             { label: 'Trabajo en curso', note: 'Revisión, organización, carga documental y elaboración de bases de datos.', state: 'now' },
@@ -701,7 +702,7 @@ FLOWS.push({
         }
       ],
       estimatedEnd: '2026-12-04',
-      progressContext: 'Estado global del Proyecto 01: finalizado al 100 % según confirmación previa del usuario. Los porcentajes 100 %, 100 % y 35 % corresponden a actividades de este nuevo reporte y se muestran por separado; no representan un nuevo cálculo del avance global.',
+      progressContext: 'Avance global calculado mediante promedio simple de las tres actividades reportadas: (100 % + 100 % + 35 %) / 3 = 78.33 %. No representa ponderaciones documentadas ni un cierre efectivo demostrado. Los porcentajes individuales se muestran por separado.',
       teamWork: {
         label: 'Equipo',
         title: 'Años y frentes asignados',
@@ -762,11 +763,11 @@ FLOWS.push({
           { icon: 'fa-calendar-days', text: 'Iniciar segunda tarea y completar su base' }
         ]
       },
-      foot: 'Proyecto finalizado globalmente al 100 % según confirmación previa · reporte de actividades: 100 %, 100 % y 35 %; término 04/12/2026 estimado, no confirmado',
+      foot: 'Avance global calculado por promedio simple: 78.33 % · actividades reportadas: 100 %, 100 % y 35 %; término 04/12/2026 estimado, no confirmado',
       footIcon: 'fa-chart-simple',
       link: {
         label: 'Ver presentación',
-        url: 'https://docs.google.com/presentation/d/1o1XpB6k9HVBXSnFB117cwZA2waCymwqXlX4sCQdYduk/edit?usp=sharing'
+        url: 'https://docs.google.com/presentation/d/1cul4C7aiWsmqsD9W3auSDhQepUWVlfKimMdJ8FWLjYk/edit?usp=sharing'
       }
     },
     {
@@ -778,20 +779,24 @@ FLOWS.push({
       description: 'Diseño y despliegue de un buscador documental para Secretaría General, desde un MVP funcional hasta su puesta en producción.',
       people: ['sebastian'],
       systems: ['fileserver', 'sheets'],
-      time: '8–10 días',
-      timeNote: 'cierre objetivo: 10 días',
+      time: 'Pendiente por revisión',
+      timeNote: '',
       scope: ['Buscador documental', 'Secretaría General', 'MVP → Producción'],
       phases: [
         { title: 'Fase 1 · Buscador MVP', desc: 'Base funcional y alcance mínimo' },
         { title: 'Fase 2a · Ajustes e implementación', desc: 'Iteración con usuarios' },
         { title: 'Fase 2b · Producción y despliegue', desc: 'Salida a operación' }
       ],
-      foot: 'Cierre objetivo: 10 días hábiles',
-      footIcon: 'fa-flag-checkered'
+      foot: 'Pendiente por revisión',
+      footIcon: 'fa-flag-checkered',
+      mockup: {
+        label: 'Mockup',
+        url: './mockups/buscador-secretaria-general-mockup.html'
+      }
     }
   ],
   footer: {
-    text: 'Proyecto 01: Finalizado al 100 %; sin fecha exacta de cierre ni cantidades finales por etapa informadas. Proyecto 02: 8–10 días, con cierre objetivo a 10 días.'
+    text: 'Proyecto 01: avance global calculado de 78.33 % mediante promedio simple de las actividades reportadas; sin fecha exacta de cierre ni cantidades finales por etapa informadas. Proyecto 02: pendiente por revisión.'
   }
 });
 

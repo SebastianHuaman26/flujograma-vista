@@ -1,4 +1,6 @@
 @media (max-width: 767px) {
+  .resolution-type-head, .resolution-type-row { grid-template-columns: 1fr; gap: 4px; }
+  .resolution-type-row ul { columns: 1; }
   .project-card--detail { padding: 13px; }
   .project-progress { gap: 10px; }
   .progress-dial { width: 54px; height: 54px; }

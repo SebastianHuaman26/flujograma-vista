@@ -42,7 +42,8 @@ function renderUnitCard(lane) {
       </div>`;
   }).join('');
   const statusTone = lane.statusTone === 'soon' ? ' unit-status--soon' : '';
-  return `<article class="unit-card" data-matchable data-people="${esc(lane.team.join(','))}" data-systems="${esc(lane.systems.join(','))}" style="--unit:${lane.color};--unit-bg:${lane.bg}">
+  const softMuted = lane.title === 'FAENF' && lane.team.includes('yesely');
+  return `<article class="unit-card${softMuted ? ' is-soft-muted' : ''}" data-matchable data-people="${esc(lane.team.join(','))}" data-systems="${esc(lane.systems.join(','))}" style="--unit:${lane.color};--unit-bg:${lane.bg}">
       <div class="unit-head">
         <div class="unit-title-wrap">
           <span class="unit-icon" aria-hidden="true"><i class="fa-solid ${esc(lane.icon)}"></i></span>

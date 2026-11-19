@@ -38,6 +38,7 @@ try {
     assert.equal(await page.locator('.plan-2027-card').count(),6);
     const activityPanels = page.locator('#flujo-7 .project-card--detail .project-progress');
     assert.equal(await activityPanels.count(),3);
+    assert.equal(await page.locator('#flujo-7 .project-card--detail .project-time').innerText().then(text => text.includes('78.33%')), true);
     assert.deepEqual(await activityPanels.evaluateAll(nodes => nodes.map(node => Number(node.dataset.progress))),[100,100,35]);
     assert.deepEqual((await activityPanels.locator('.progress-value').allTextContents()).map(value => value.replace(/\s/g,'')),['100%','100%','35%']);
     const panelMetrics = await activityPanels.evaluateAll(nodes => nodes.map(node => {
@@ -162,7 +163,8 @@ try {
   const expected = FLOWS.filter(f => f.people.some(id => ['yesely','lucero'].includes(id)) && f.systems.some(id => ['imaging','sheets'].includes(id))).map(f => f.n);
   assert.deepEqual(await page.locator('.flow-card:not([hidden])').evaluateAll(nodes => nodes.map(n => Number(n.dataset.flow))), expected);
   await page.locator('#resetFilters').click();
-  assert.match(await page.locator('#flujo-7 .progress-dial').getAttribute('aria-label'), /100%/);
+  assert.match(await page.locator('#flujo-7 .project-card--detail .progress-context').innerText(), /78\.33 %/);
+  assert.equal(await page.locator('#flujo-7 .project-card--detail a.project-link').getAttribute('href'), 'https://docs.google.com/presentation/d/1cul4C7aiWsmqsD9W3auSDhQepUWVlfKimMdJ8FWLjYk/edit?usp=sharing');
   await page.locator('[data-goto-flow]').first().click();
   assert.equal(await page.locator('#flujo-2').evaluate(d => d.open), true);
   const shell = page.locator('[data-track-shell]').filter({ has: page.locator('[data-track-next]:not([disabled])') }).first();

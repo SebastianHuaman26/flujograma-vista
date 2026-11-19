@@ -63,6 +63,7 @@ function projectFoot(project) {
     <span><i class="fa-solid fa-circle-check" aria-hidden="true"></i>${esc(project.foot)}</span>
     <span class="project-foot-actions">
       ${project.link ? `<a class="project-link" href="${esc(project.link.url)}" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-google-drive" aria-hidden="true"></i>${esc(project.link.label)}</a>` : ''}
+      ${project.mockup ? `<a class="project-link" href="${esc(project.mockup.url)}" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-display" aria-hidden="true"></i>${esc(project.mockup.label)}</a>` : ''}
       <span class="close-date"><i class="fa-solid ${esc(project.footIcon)}" aria-hidden="true"></i>${esc(project.status)}</span>
     </span>
   </div>`;
@@ -81,6 +82,10 @@ function renderProjectProgress(progress) {
       <strong class="progress-title">${esc(progress.title)}</strong>
       <div class="progress-track" aria-hidden="true"><span></span></div>
       <span class="progress-note">${esc(progress.note)}</span>
+      ${progress.actions ? `<div class="progress-actions">
+        <a class="progress-action" href="${esc(progress.actions.excelUrl)}" target="_blank" rel="noopener noreferrer"><i class="fa-regular fa-file-excel" aria-hidden="true"></i>Excel Index</a>
+        <button class="progress-action progress-action--button" type="button" data-dialog-resolution-types aria-haspopup="dialog" aria-controls="stepDialog"><i class="fa-regular fa-folder-open" aria-hidden="true"></i>Tipos de resoluciones</button>
+      </div>` : ''}
     </div>
     <div class="progress-blocks">
       ${progress.blocks.map(block => `<span class="progress-block progress-block--${esc(block.state)}"><span class="progress-block-dot"></span><span><b>${esc(block.label)}</b><small>${esc(block.note)}</small></span></span>`).join('')}

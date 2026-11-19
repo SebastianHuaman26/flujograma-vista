@@ -24,7 +24,8 @@ function renderBodySection(flow, section) {
       ${section.period ? `<span class="flow-section-title">${esc(section.period)}</span>` : ''}
       <span class="flow-section-count">${total} pasos</span>
     </div>` : '';
-  return `<div class="flow-body-inner">
+  const sectionClass = section.owner === 'yesely' && section.steps ? ' flow-body-inner--faenf' : '';
+  return `<div class="flow-body-inner${sectionClass}">
     ${head}
     ${inner}
   </div>`;
